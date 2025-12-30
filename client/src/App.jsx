@@ -1,9 +1,10 @@
 import { useRef, useEffect } from "react";
 import { useCamera } from "./camera/useCamera";
 import { createFaceMesh } from "./landmarks/faceMesh";
-import { drawLandmarks } from "./render/drawLandmarks";
+// import { drawLandmarks } from "./render/drawLandmarks";
 import { Camera } from "@mediapipe/camera_utils";
-
+import { computeFaceTransform } from "./geometry/faceGeometry";
+import { drawFaceBox } from "./render/drawLandmarks";
 function App() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -17,14 +18,17 @@ function App() {
     const ctx = canvas.getContext("2d");
 
     const faceMesh = createFaceMesh((results) => {
-      if (
-        results.multiFaceLandmarks &&
-        results.multiFaceLandmarks.length > 0
-      ) {
+      if (results.multiFaceLandmarks?.length > 0) {
         const landmarks = results.multiFaceLandmarks[0];
-        drawLandmarks(ctx, landmarks, canvas.width, canvas.height);
+        const transform = computeFaceTransform(
+          landmarks,
+          canvas.width,
+          canvas.height
+        );
+        drawFaceBox(ctx, transform);
       }
     });
+
 
     const camera = new Camera(videoRef.current, {
       onFrame: async () => {
