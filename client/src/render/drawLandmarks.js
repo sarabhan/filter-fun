@@ -1,14 +1,23 @@
-export function drawLandmarks(ctx, landmarks, width, height) {
-  ctx.clearRect(0, 0, width, height);
+export function drawFaceBox(ctx, transform) {
+  const { cx, cy, angle, scale } = transform;
 
-  ctx.fillStyle = "red";
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  for (const point of landmarks) {
-    const x = point.x * width;
-    const y = point.y * height;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(angle);
 
-    ctx.beginPath();
-    ctx.arc(x, y, 2, 0, 2 * Math.PI);
-    ctx.fill();
-  }
+  const boxWidth = scale * 1.5;
+  const boxHeight = scale;
+
+  ctx.strokeStyle = "lime";
+  ctx.lineWidth = 3;
+  ctx.strokeRect(
+    -boxWidth / 2,
+    -boxHeight / 2,
+    boxWidth,
+    boxHeight
+  );
+
+  ctx.restore();
 }
