@@ -9,7 +9,7 @@ A browser-based real-time face filter system built as a computer vision exercise
 
 ## Current Status
 - [x] Day 1: Webcam + facial landmark visualization
-- [ ] Day 2: Geometry-based face alignment
+- [x] Day 2: Geometry-based face alignment
 - [ ] Day 3: Temporal stabilization
 - [ ] Day 4: First filter
 - [ ] Day 5: Head pose estimation
