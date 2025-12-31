@@ -47,7 +47,7 @@ function App() {
         ref={videoRef}
         style={{ position: "absolute", top: 0, left: 0 }}
       />
-      <canvas
+      <canvas //default canvas size
         ref={canvasRef}
         width={640}
         height={480}
