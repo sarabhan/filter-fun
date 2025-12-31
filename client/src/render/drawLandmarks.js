@@ -3,10 +3,11 @@ export function drawFaceBox(ctx, transform) {
 
   ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(angle);
-
+  ctx.save(); //save current landmarks
+  ctx.translate(cx, cy); //move to center of face
+  ctx.rotate(angle); //rotate according to face angle
+  
+  //scale according to face size
   const boxWidth = scale * 1.5;
   const boxHeight = scale;
 

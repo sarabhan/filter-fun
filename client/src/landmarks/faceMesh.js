@@ -6,6 +6,7 @@ export function createFaceMesh(onResults) {
       `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`,
   });
 
+  //use media pipe only to detect face mesh in a modular way
   faceMesh.setOptions({
     maxNumFaces: 1,
     refineLandmarks: true,
