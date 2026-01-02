@@ -5,7 +5,23 @@ import { createFaceMesh } from "./landmarks/faceMesh";
 import { Camera } from "@mediapipe/camera_utils";
 import { computeFaceTransform } from "./geometry/faceGeometry";
 import { drawFaceBox } from "./render/drawLandmarks";
+import { OneEuroFilter } from "./smoothing/oneEuroFilter";
+import { drawGlasses } from "./filters/glassesFilter";
+
+
+function unwrapAngle(prev, curr) {
+  let delta = curr - prev;
+  if (delta > Math.PI) delta -= 2 * Math.PI;
+  if (delta < -Math.PI) delta += 2 * Math.PI;
+  return prev + delta;
+}
+
 function App() {
+  const xFilter = useRef(new OneEuroFilter(60, 1.0, 0.01));
+  const yFilter = useRef(new OneEuroFilter(60, 1.0, 0.01));
+  const scaleFilter = useRef(new OneEuroFilter(60, 1.0, 0.01));
+  const angleFilter = useRef(new OneEuroFilter(60, 1.0, 0.01));
+
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -25,7 +41,25 @@ function App() {
           canvas.width,
           canvas.height
         );
-        drawFaceBox(ctx, transform);
+        const now = performance.now();
+
+        let { cx, cy, angle, scale } = transform;
+
+        // Angle unwrap BEFORE filtering
+        const prevAngle = angleFilter.current.prevValue ?? angle;
+        angle = unwrapAngle(prevAngle, angle);
+
+        // Apply One Euro filters
+        cx = xFilter.current.filter(cx, now);
+        cy = yFilter.current.filter(cy, now);
+        scale = scaleFilter.current.filter(scale, now);
+        angle = angleFilter.current.filter(angle, now);
+
+        // Draw using smoothed values
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGlasses(ctx, { cx, cy, angle, scale });
+
+
       }
     });
 
